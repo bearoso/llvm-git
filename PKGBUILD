@@ -95,6 +95,12 @@ source=("${_pkgname}::git+https://github.com/llvm/llvm-project.git"
         'llvm-config.h')
 sha256sums=('SKIP'
             '844408b3cb84b4757e3c096dc89e24694f852bfc11a9cec295bc888748f4e10d')
+
+prepare() {
+    cd "${srcdir}/${_pkgname}/clang-tools-extra/clangd/indexer"
+    sed -i "s/add_clang_executable/add_clang_tool/g" CMakeLists.txt
+}
+
 pkgver() {
     cd "${srcdir}/${_pkgname}/${_pkgname}"
 
@@ -117,7 +123,7 @@ build() {
     export PKG_CONFIG_PATH='/usr/lib/pkgconfig'
 
     cmake -G Ninja \
-    -DLLVM_ENABLE_PROJECTS='clang;lldb;compiler-rt;lld;polly' \
+    -DLLVM_ENABLE_PROJECTS='clang;clang-tools-extra;lldb;compiler-rt;lld;polly' \
     -DLLVM_ENABLE_BINDINGS=OFF \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
